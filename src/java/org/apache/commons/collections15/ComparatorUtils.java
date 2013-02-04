@@ -105,7 +105,7 @@ public class ComparatorUtils {
      * @throws ClassCastException   if the comparators collection contains the wrong object type
      * @see ComparatorChain
      */
-    public static <T> Comparator<T> chainedComparator(Collection<T> comparators) {
+    public static <T> Comparator<T> chainedComparator(Collection<Comparator<T>> comparators) {
         return chainedComparator((Comparator[]) comparators.toArray(new Comparator[comparators.size()]));
     }
 
