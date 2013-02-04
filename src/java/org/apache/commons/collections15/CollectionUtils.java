@@ -892,7 +892,77 @@ public class CollectionUtils {
         }
         return total;
     }
+    
+    /**
+     * Checks if the specified collection/array/iterator is empty.
+     * <p>
+     * This method can handles objects as follows
+     * <ul>
+     * <li>Collection - via collection isEmpty
+     * <li>Map - via map isEmpty
+     * <li>Array - using array size
+     * <li>Iterator - via hasNext
+     * <li>Enumeration - via hasMoreElements
+     * </ul>
+     * <p>
+     * Note: This method is named to avoid clashing with
+     * {@link #isEmpty(Collection)}.
+     * 
+     * @param object  the object to get the size of, not null
+     * @return true if empty
+     * @throws IllegalArgumentException thrown if object is not recognised or null
+     * @since Commons Collections 3.2
+     */
+    public static boolean sizeIsEmpty(Object object) {
+        if (object instanceof Collection) {
+            return ((Collection) object).isEmpty();
+        } else if (object instanceof Map) {
+            return ((Map) object).isEmpty();
+        } else if (object instanceof Object[]) {
+            return ((Object[]) object).length == 0;
+        } else if (object instanceof Iterator) {
+            return ((Iterator) object).hasNext() == false;
+        } else if (object instanceof Enumeration) {
+            return ((Enumeration) object).hasMoreElements() == false;
+        } else if (object == null) {
+            throw new IllegalArgumentException("Unsupported object type: null");
+        } else {
+            try {
+                return Array.getLength(object) == 0;
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("Unsupported object type: " + object.getClass().getName());
+            }
+        }
+    }
 
+    //-----------------------------------------------------------------------
+    /**
+     * Null-safe check if the specified collection is empty.
+     * <p>
+     * Null returns true.
+     * 
+     * @param coll  the collection to check, may be null
+     * @return true if empty or null
+     * @since Commons Collections 3.2
+     */
+    public static <E> boolean isEmpty(Collection<E> coll) {
+        return (coll == null || coll.isEmpty());
+    }
+
+    /**
+     * Null-safe check if the specified collection is not empty.
+     * <p>
+     * Null returns false.
+     * 
+     * @param coll  the collection to check, may be null
+     * @return true if non-null and non-empty
+     * @since Commons Collections 3.2
+     */
+    public static <E> boolean isNotEmpty(Collection<E> coll) {
+        return !CollectionUtils.isEmpty(coll);
+    }
+
+    //-----------------------------------------------------------------------
     /**
      * Reverses the order of the given array.
      *
